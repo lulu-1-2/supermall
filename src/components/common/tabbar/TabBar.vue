@@ -10,7 +10,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* 设置弹性盒的样式 */
 #tab-bar {
   /* 开启弹性盒 */

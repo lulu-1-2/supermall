@@ -135,7 +135,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* .content{
   background-color: red;
   height: 100px;

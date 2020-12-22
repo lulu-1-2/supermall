@@ -13,7 +13,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .nav-bar{
      /* 将容器设置为块级弹性容器 */
     display: flex;

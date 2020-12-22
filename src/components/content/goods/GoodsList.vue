@@ -29,7 +29,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .goods{
     display: flex;
     flex-flow: wrap;

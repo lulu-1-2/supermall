@@ -1,13 +1,128 @@
 <template>
-  <h2>我是我的</h2>
+  <div class="content">
+    <scroll>
+      <ul>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+        <li>人员信息</li>
+      </ul>
+    </scroll>
+  </div>
 </template>
 
 <script>
+import Scroll from 'components/common/scroll/Scroll'
 export default {
-name:'Profile'
+name:'Profile',
+components:{
+  Scroll
+}
 }
 </script>
 
-<style>
+<style scoped>
+.content{
+  background-color: red;
+  height: 100px;
+  overflow: hidden;
+}
+</style>>
 
 </style>

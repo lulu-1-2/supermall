@@ -41,7 +41,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* 设置弹性盒里各个部分的样式 */
 .tab-bar-item {
   /* 设置伸缩1，自由伸缩 */

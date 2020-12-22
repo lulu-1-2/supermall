@@ -11,7 +11,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .slide{
   width: 100%;
   /* 不收缩 */

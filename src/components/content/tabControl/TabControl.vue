@@ -32,13 +32,13 @@ export default {
     itemClick(index) {
       this.currentIndex = index;
       //子组件发射一个自定义事件
-      this.$emit('tabClick',index);
+      this.$emit("tabClick", index);
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .tab-control {
   /* 开启弹性盒 */
   display: flex;

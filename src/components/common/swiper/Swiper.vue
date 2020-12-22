@@ -220,7 +220,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #hy-swiper {
   /* 溢出的元素会被裁剪 */
   overflow: hidden;
