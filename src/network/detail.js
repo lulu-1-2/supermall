@@ -1,4 +1,5 @@
 import { request } from './request.js'
+//详情信息
 export function getDetail(iid) {
     return request({
         url: '/detail',
@@ -6,6 +7,12 @@ export function getDetail(iid) {
             iid
         }
     })
+}
+//推荐信息
+export function getRecommend(){
+return request({
+    url:'/recommend'
+})
 }
 //商品信息
 //抽离组件需要的数据

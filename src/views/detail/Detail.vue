@@ -6,8 +6,9 @@
       <detail-base-info :goods="goods" />
       <detail-shop-info :shop="shop" />
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad" />
-      <detail-param-info :param-info = 'paramInfo'/>
-      <detail-comment-info :comment-info = 'commentInfo'/>
+      <detail-param-info :param-info="paramInfo" />
+      <detail-comment-info :comment-info="commentInfo" />
+      <goods-list :goods = 'recommends'/>
     </scroll>
   </div>
 </template>
@@ -18,12 +19,13 @@ import DetailSwiper from "views/detail/childComps/DetailSwiper";
 import DetailBaseInfo from "views/detail/childComps/DetailBaseInfo";
 import DetailShopInfo from "views/detail/childComps/DetailShopInfo";
 import DetailGoodsInfo from "views/detail/childComps/DetailGoodsInfo";
-import DetailParamInfo from 'views/detail/childComps/DetailParamInfo';
-import DetailCommentInfo from 'views/detail/childComps/DetailCommentInfo';
+import DetailParamInfo from "views/detail/childComps/DetailParamInfo";
+import DetailCommentInfo from "views/detail/childComps/DetailCommentInfo";
 
 import Scroll from "components/common/scroll/Scroll";
+import GoodsList from 'components/content/goods/GoodsList'
 
-import { getDetail, GoodsInfo, Shop ,GoodsParam} from "network/detail";
+import { getDetail, getRecommend, GoodsInfo, Shop, GoodsParam } from "network/detail";
 
 export default {
   name: "Detail",
@@ -36,6 +38,7 @@ export default {
     DetailParamInfo,
     DetailCommentInfo,
     Scroll,
+    GoodsList
   },
   data() {
     return {
@@ -44,8 +47,9 @@ export default {
       goods: {},
       shop: {},
       detailInfo: {},
-      paramInfo:{},
-      commentInfo:{}
+      paramInfo: {},
+      commentInfo: {},
+      recommends:[]
     };
   },
   created() {
@@ -53,7 +57,7 @@ export default {
     this.iid = this.$route.params.iid;
     //2.根据iid请求详情数据
     getDetail(this.iid).then((res) => {
-      console.log(res);
+      // console.log(res);
       const data = res.result;
       //获取顶部的图片轮播数据
       this.topImages = data.itemInfo.topImages;
@@ -64,11 +68,16 @@ export default {
       //保存商品的详情数据
       this.detailInfo = data.detailInfo;
       //保存商品的参数信息
-      this.paramInfo = new GoodsParam(data.itemParams.info,data.itemParams.rule);
+      this.paramInfo = new GoodsParam(data.itemParams.info, data.itemParams.rule);
       //获取1条评论信息
       if (data.rate.cRate !== 0) {
         this.commentInfo = data.rate.list[0];
       }
+    });
+    //3.获取推荐数据
+    getRecommend().then((res) => {
+      console.log(res);
+      this.recommends = res.data.list;
     });
   },
   methods: {
