@@ -151,7 +151,7 @@ font-size: 18px;
     border-radius: 8px;
     position: relative;
     left: 92px;
-    top: 26px;
+    top: 16px;
 }
 .shop-bottom .enter-shop{
     text-align: center;

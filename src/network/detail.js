@@ -34,4 +34,15 @@ export class Shop {
         this.goodsCount = shopInfo.cGoods;
     }
 }
+//参数信息
+
+export class GoodsParam {
+    constructor(info, rule) {
+        //注：images可能没有值（某些商品有值，某些商品没有值）
+        this.image = info.images ? info.image[0] : '';
+        this.infos = info.set;
+        this.sizes = rule.tables;
+    }
+}
+
 
