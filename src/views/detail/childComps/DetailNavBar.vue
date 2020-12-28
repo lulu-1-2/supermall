@@ -34,6 +34,8 @@ export default {
   methods: {
     titleClick(index) {
       this.currentIndex = index;
+      //发送标题点击事件
+      this.$emit('titleClick',index);
     },
     backClick(){
         this.$router.back();

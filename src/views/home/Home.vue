@@ -45,10 +45,11 @@ import NavBar from "components/common/navbar/NavBar.vue";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
-import BackTop from "components/content/backTop/BackTop";
+// import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMulitData, getHomeGoods } from "network/home.js";
 import { debounce } from "common/utils";
+import {itemListenerMixin , backTopMixin} from 'common/mixin'
 
 export default {
   name: "Home",
@@ -61,7 +62,7 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackTop,
+    // BackTop,
   },
   data() {
     return {
@@ -73,12 +74,14 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
-      isShowBackTop: false,
+      // isShowBackTop: false,
       tabOffsetTop: 0,
       isTabFixed: false,
       saveY: 0,
+      
     };
   },
+  mixins:[itemListenerMixin, backTopMixin],
   //组件回来时调用
   activated() {
     this.$refs.scroll.scrollTo(0 ,this.saveY, 0);
@@ -87,7 +90,10 @@ export default {
   },
   deactivated() {
     //console.log('deactive');
+    //保存Y值
     this.saveY = this.$refs.scroll.getScrollY();
+    //取消全局事件的监听
+    this.$bus.$off('itemImageLoad',this.itemImgListener);
   },
   //组件创建完成以后
   created() {
@@ -98,14 +104,8 @@ export default {
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
   },
-
   mounted() {
-    //监听item中图片加载完成
-    //created()生命周期函数里面可能拿不到$refs
-    const refresh = debounce(this.$refs.scroll.refresh, 200);
-    this.$bus.$on("itemImageLoad", () => {
-      refresh();
-    });
+    //console.log('我是home里面的内容');
   },
   methods: {
     /**
@@ -127,9 +127,9 @@ export default {
       this.$refs.tabControl1.currentIndex = index;
       this.$refs.tabControl2.currentIndex = index;
     },
-    backClick() {
-      this.$refs.scroll.scrollTo(0, 0);
-    },
+    // backClick() {
+    //   this.$refs.scroll.scrollTo(0, 0);
+    // },
     contentScroll(position) {
       //1.判断BackTop是否显示
       this.isShowBackTop = -position.y > 1000;

@@ -41,10 +41,11 @@ export default {
   methods: {
     imgLoad() {
       //判断所有的图片都加载完成
-      if (++this.counter === this.imagesLength) {
-        //子组件发射自定义事件
-        this.$emit("imageLoad");
-      }
+      // if (++this.counter === this.imagesLength) {
+      //   //子组件发射自定义事件
+      //   this.$emit("imageLoad");
+      // }
+      this.$emit("imageLoad");
     },
   },
   //使用watch来响应数据的变化

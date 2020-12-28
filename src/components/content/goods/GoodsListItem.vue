@@ -28,6 +28,7 @@ export default {
   methods: {
     imageLoad(){
       //console.log('------------')
+      //根据事件总线发出去一个事件
       this.$bus.$emit('itemImageLoad');
     },
     itemClick(){

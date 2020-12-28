@@ -1,15 +1,17 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav" />
-    <scroll class="content" ref="scroll">
+    <detail-nav-bar class="detail-nav" @titleClick="titleClick" ref="nav" />
+    <scroll class="content" ref="scroll" @scroll="contentScroll" :probe-type="3">
       <detail-swiper :top-images="topImages" />
       <detail-base-info :goods="goods" />
       <detail-shop-info :shop="shop" />
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad" />
-      <detail-param-info :param-info="paramInfo" />
-      <detail-comment-info :comment-info="commentInfo" />
-      <goods-list :goods = 'recommends'/>
+      <detail-param-info :param-info="paramInfo" ref="param" />
+      <detail-comment-info :comment-info="commentInfo" ref="comment" />
+      <goods-list :goods="recommends" ref="recommend" />
     </scroll>
+    <detail-bottom-bar @addCart = 'addToCart'/>
+    <back-top @click.native="backClick" v-show="isShowBackTop" />
   </div>
 </template>
 
@@ -21,11 +23,15 @@ import DetailShopInfo from "views/detail/childComps/DetailShopInfo";
 import DetailGoodsInfo from "views/detail/childComps/DetailGoodsInfo";
 import DetailParamInfo from "views/detail/childComps/DetailParamInfo";
 import DetailCommentInfo from "views/detail/childComps/DetailCommentInfo";
+import DetailBottomBar from "views/detail/childComps/DetailBottomBar";
 
 import Scroll from "components/common/scroll/Scroll";
-import GoodsList from 'components/content/goods/GoodsList'
+import GoodsList from "components/content/goods/GoodsList";
 
 import { getDetail, getRecommend, GoodsInfo, Shop, GoodsParam } from "network/detail";
+
+import { debounce } from "common/utils";
+import { itemListenerMixin, backTopMixin } from "common/mixin";
 
 export default {
   name: "Detail",
@@ -37,8 +43,9 @@ export default {
     DetailGoodsInfo,
     DetailParamInfo,
     DetailCommentInfo,
+    DetailBottomBar,
     Scroll,
-    GoodsList
+    GoodsList,
   },
   data() {
     return {
@@ -49,9 +56,13 @@ export default {
       detailInfo: {},
       paramInfo: {},
       commentInfo: {},
-      recommends:[]
+      recommends: [],
+      themeTopYs: [],
+      getThemeTopY: null,
+      currentIndex: 0,
     };
   },
+  mixins: [itemListenerMixin, backTopMixin],
   created() {
     //1.保存存入的iid
     this.iid = this.$route.params.iid;
@@ -73,18 +84,104 @@ export default {
       if (data.rate.cRate !== 0) {
         this.commentInfo = data.rate.list[0];
       }
+
+      //DOM渲染完，图片没有渲染完，调用函数nextTick
+      // this.$nextTick(() => {
+      //   this.themeTopYs = [];
+      //   this.themeTopYs.push(0);
+      //   this.themeTopYs.push(this.$refs.param.$el.offsetTop);
+      //   this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+      //   this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+      //   console.log(this.themeTopYs);
+      // });
     });
     //3.获取推荐数据
     getRecommend().then((res) => {
-      console.log(res);
+      //console.log(res);
       this.recommends = res.data.list;
     });
+
+    //给getThemeTopY赋值
+    this.getThemeTopY = debounce(() => {
+      this.themeTopYs = [];
+      this.themeTopYs.push(0);
+      this.themeTopYs.push(this.$refs.param.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+      this.themeTopYs.push(Number.MAX_VALUE);
+      //console.log(this.themeTopYs);
+    }, 200);
+  },
+  //安装好的
+  mounted() {
+    //console.log('我是detail中的内容')
+    //$el用于获取组件中的元素
+  },
+  //销毁的时候
+  destroyed() {
+    this.$bus.$off("itemImageLoad", this.itemImgListener);
   },
   methods: {
+    //监听图片加载事件
     imageLoad() {
       //刷新数据
-      this.$refs.scroll.refresh();
+      //防抖函数
+      this.newRefresh();
+      //获取y的值
+      this.getThemeTopY();
     },
+    //监听标题点击事件
+    titleClick(index) {
+      //console.log(index);
+      this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 300);
+    },
+    //监听滚动的位置
+    contentScroll(position) {
+      //console.log(position);
+      //获取y的值
+      const positionY = -position.y;
+      //positionY的值和主題中的y值進行對比
+      //遍历获取主题中的值
+      let length = this.themeTopYs.length;
+      for (let i = 0; i < length - 1; i++) {
+        //分两种情况判断，最后一次不需要判断< i+1的情况
+        //this.currentIndex !== i,防止调用过于频繁
+        // if (this.currentIndex !== i &&
+        //     ((i < length - 1 &&
+        //     this.themeTopYs[i] < positionY && positionY < this.themeTopYs[i + 1]) ||
+        //   (i === length - 1 && positionY >= this.themeTopYs[i]))) {
+        //   this.currentIndex = i;
+        //   //console.log(this.currentIndex);
+        //   this.$refs.nav.currentIndex = this.currentIndex;
+
+        // }
+        if (
+          this.currentIndex !== i &&
+          positionY < this.themeTopYs[i + 1] &&
+          positionY >= this.themeTopYs[i]
+        ) {
+          this.currentIndex = i;
+          this.$refs.nav.currentIndex = this.currentIndex;
+        }
+      }
+
+      //判断BackTop是否显示
+      this.isShowBackTop = -position.y > 1000;
+    },
+    //监听加入购物车
+    addToCart(){
+      //console.log('点击加入购物车');
+      //1.获取购物车需要展示的信息
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.realPrice;
+      product.iid = this.iid;
+
+      //2.将商品添加到购物车里
+      this.$store.dispatch('addCart',product);
+    }
   },
 };
 </script>
@@ -97,7 +194,7 @@ export default {
   height: 100vh;
 }
 .content {
-  height: calc(100% - 44px);
+  height: calc(100% - 44px - 49px);
 }
 .detail-nav {
   position: relative;

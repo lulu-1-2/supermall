@@ -39,7 +39,7 @@ export default {
         this.$emit("scroll", position);
       });
     }
-    //3.监听滚动的位置
+    //3.监听上拉到顶部的事件
     if (this.pullUpLoad ) {
       this.scroll.on("pullingUp", () => {
       this.$emit("pullingUp");
