@@ -10,7 +10,7 @@ export default {
   props: {
     isChecked: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
 };
@@ -24,8 +24,8 @@ export default {
   height: 22px;
 }
 .check-buttom img {
-  width: 19px;
-  height: 19px;
+  width: 18px;
+  height: 18px;
 }
 .check {
   border-color:  red;

@@ -10,8 +10,9 @@
       <detail-comment-info :comment-info="commentInfo" ref="comment" />
       <goods-list :goods="recommends" ref="recommend" />
     </scroll>
-    <detail-bottom-bar @addCart = 'addToCart'/>
+    <detail-bottom-bar @addCart="addToCart" />
     <back-top @click.native="backClick" v-show="isShowBackTop" />
+    <toast :message = 'message' :show = 'show'/>
   </div>
 </template>
 
@@ -27,11 +28,14 @@ import DetailBottomBar from "views/detail/childComps/DetailBottomBar";
 
 import Scroll from "components/common/scroll/Scroll";
 import GoodsList from "components/content/goods/GoodsList";
+import Toast from 'components/common/toast/Toast'
 
 import { getDetail, getRecommend, GoodsInfo, Shop, GoodsParam } from "network/detail";
 
 import { debounce } from "common/utils";
 import { itemListenerMixin, backTopMixin } from "common/mixin";
+
+import { mapActions } from "vuex";
 
 export default {
   name: "Detail",
@@ -46,6 +50,7 @@ export default {
     DetailBottomBar,
     Scroll,
     GoodsList,
+    Toast
   },
   data() {
     return {
@@ -60,6 +65,8 @@ export default {
       themeTopYs: [],
       getThemeTopY: null,
       currentIndex: 0,
+      message:'',
+      show:false
     };
   },
   mixins: [itemListenerMixin, backTopMixin],
@@ -122,6 +129,7 @@ export default {
     this.$bus.$off("itemImageLoad", this.itemImgListener);
   },
   methods: {
+    ...mapActions(["addCart"]),
     //监听图片加载事件
     imageLoad() {
       //刷新数据
@@ -169,7 +177,7 @@ export default {
       this.isShowBackTop = -position.y > 1000;
     },
     //监听加入购物车
-    addToCart(){
+    addToCart() {
       //console.log('点击加入购物车');
       //1.获取购物车需要展示的信息
       const product = {};
@@ -180,8 +188,23 @@ export default {
       product.iid = this.iid;
 
       //2.将商品添加到购物车里
-      this.$store.dispatch('addCart',product);
-    }
+      // this.$store.dispatch("addCart", product).then((res) => {
+      //   console.log(res);
+      // });
+      this.addCart(product).then((res) => {
+        //console.log(res);
+        // this.message = res;
+        // this.show = true;
+
+        // setTimeout(() => {
+        //   this.message = '';
+        //   this.show = false;
+        // },1500)
+        //console.log(this.$toast);
+        this.$toast.show(res,1500);
+      });
+      //3.商品添加成功
+    },
   },
 };
 </script>
